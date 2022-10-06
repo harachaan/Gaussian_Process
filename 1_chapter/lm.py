@@ -15,7 +15,7 @@ from numpy.linalg import inv
 
 xlim = 4
 ylim = 2
-# N = 200 # これはなんだ
+N = 200 # これはなんだ
 
 def phi (x):
     return [1, x, x*x, sin(x), cos(x)]
