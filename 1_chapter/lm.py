@@ -15,7 +15,7 @@ from numpy.linalg import inv
 
 xlim = 4
 ylim = 2
-N = 200
+N = 200 # これはなんだ
 
 def phi (x):
     return [1, x, x*x, sin(x), cos(x)]
@@ -36,8 +36,8 @@ def usage ():
     sys.exit (0)
 
 def main ():
-    # data = np.loadtxt(sys.argv[1])
-    data = np.loadtxt('nonlinear.dat')
+    data = np.loadtxt(sys.argv[1])
+    # data = np.loadtxt('nonlinear.dat')
     X = np.array([phi(x) for x in data.T[0]])
     y = data.T[1]
     w = np.dot (np.dot (inv (np.dot(X.T,X)), X.T), y)
@@ -53,10 +53,12 @@ def main ():
     add_xy ()
     putil.simpleaxis ()
 
-    # if len(sys.argv) > 2:
-    #     putil.savefig (sys.argv[2])
+    if len(sys.argv) > 2:
+        putil.savefig (sys.argv[2])
     show ()
+    
     
 
 if __name__ == "__main__":
     main ()
+    
