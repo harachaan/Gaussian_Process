@@ -1,8 +1,5 @@
 % p46 図2.4 ２次元の多変量標準ガウス分布
 
-clc
-clear
-close all
 
 % むずくねええええ
 
@@ -14,8 +11,8 @@ close all
 % -------
 
 
-x1 = -4:0.1:4;
-x2 = -4:0.1:4;
+x1 = -4:1:4;
+x2 = -4:1:4;
 
 % x = [x1
 %      x2];
@@ -36,19 +33,15 @@ x2 = -4:0.1:4;
 X = [X1(:) X2(:)]'; % これが座標を表す配列
 Y = zeros(length(X), 1);
 for i = 1:1:length(X)
-    Y(i,1) = gauss2_pdf(X(:,i));
-%     Y(i,1)
+    Y(i,1) = gauss2(X(:,i));
+    Y(i,1)
 end
 
-Y = reshape(Y, length(X1), length(X2));
-f1 = figure;
-figure(f1);
-surf(X1, X2, Y)
 
 
 
-function gauss2_pdf = gauss2_pdf(x)
-gauss2_pdf = exp(lgauss2(x));
+function gauss2 = gauss2(x)
+gauss2 = exp(lgauss2(x));
 end
 
 function lgauss2 = lgauss2(x)
