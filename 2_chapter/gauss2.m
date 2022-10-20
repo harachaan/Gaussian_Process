@@ -1,0 +1,58 @@
+% p46 図2.4 ２次元の多変量標準ガウス分布
+
+clc
+clear
+close all
+
+% むずくねええええ
+
+
+% とりあえず1次元標準正規分布
+% z = -4:0.1:4;
+% gauss1 = 1 / (2 * pi) * exp(-z.^2 / 2);
+% plot(z, gauss1, 'b-')
+% -------
+
+
+x1 = -4:0.1:4;
+x2 = -4:0.1:4;
+
+% x = [x1
+%      x2];
+
+
+% 座標設定？ x1が縦軸，x2が横軸のイメージ
+% x = zeros(length(x1), length(x2));
+% for i = 1:1:length(x1)
+%     for j = 1:1:length(x2)
+%         x(i,j) = [x1(1,i) x2(1,j)];
+%     end
+% end % 各要素をベクトルにできなくてつんだ
+
+
+
+[X1, X2] = meshgrid(x1, x2);
+% X1(:) % 各列を全部縦につなげて1列ベクトルにする
+X = [X1(:) X2(:)]'; % これが座標を表す配列
+Y = zeros(length(X), 1);
+for i = 1:1:length(X)
+    Y(i,1) = gauss2_pdf(X(:,i));
+%     Y(i,1)
+end
+
+Y = reshape(Y, length(X1), length(X2));
+f1 = figure;
+figure(f1);
+surf(X1, X2, Y)
+
+
+
+function gauss2_pdf = gauss2_pdf(x)
+gauss2_pdf = exp(lgauss2(x));
+end
+
+function lgauss2 = lgauss2(x)
+D = length(x);
+I = eye(length(x(:,1)));
+lgauss2 = -(x' * I^(-1) * x) / 2 - log(2 * pi) * D /2;
+end
