@@ -108,7 +108,7 @@ for i = 1:1:N
         K(i,j) = kernel(xx(i,:), xx(j,:));
     end
 end
-K = K + eta * eye(N); % ちょっと何してるかわからない
+K = K + eta * eye(N); % ちょっと何してるかわからない→もしかしてノイズを合わせてる？
 end
 
 % fgpとは
