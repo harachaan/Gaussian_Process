@@ -26,6 +26,7 @@ def kgauss (params):
     [tau,sigma] = params
     return lambda x,y: tau * exp (-(x - y)**2 / (2 * sigma * sigma))
 
+# kvはなに？
 def kv (x, xtrain, kernel):
     return np.array ([kernel(x,xi) for xi in xtrain])
 
