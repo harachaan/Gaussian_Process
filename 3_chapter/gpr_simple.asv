@@ -22,9 +22,10 @@ end
 % 無名関数
 kgauss = @(x,y) theta_1 * exp(-(x - y)^2 / (2 * theta_2 * theta_2));
 
-% ここでとりあえず回帰はできた？
+% プロットしたい
 xx = (-1:0.1:5)';
 regression = gpr(xx, xtrain, ytrain, kgauss, eta);
+y = regeression(:,1);
 
 
 % 列がxtrainで，行に入力xx(一次元の入力であれば横軸)
