@@ -23,8 +23,15 @@ end
 kgauss = @(x,y) theta_1 * exp(-(x - y)^2 / (2 * theta_2 * theta_2));
 
 % ここでとりあえず回帰はできた？
-xx = (-1:0.1:5)';
-regression = gpr(xx, xtrain, ytrain, kgauss, eta);
+xx = (-0.5:0.1:3)';
+regression = gpr(xx, xtrain, ytrain, kgauss, eta) % 1列目が期待値，２列目が分散
+plot(xtrain, ytrain, 'bx');
+hold on;
+plot(xx, regression(:,1), 'k-');
+
+
+
+
 
 
 % 列がxtrainで，行に入力xx(一次元の入力であれば横軸)
