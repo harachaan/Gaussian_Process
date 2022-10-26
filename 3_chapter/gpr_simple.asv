@@ -28,7 +28,6 @@ regression = gpr(xx, xtrain, ytrain, kgauss, eta); % 1列目が期待値，２�
 mu = regression(:,1); var = regression(:,2);
 two_sigma1 = mu - 2 * sqrt(var); two_sigma2 = mu + 2 * sqrt(var); 
 
-% プロット
 f1 = figure;
 figure(f1)
 patch([xx', fliplr(xx')], [two_sigma1', fliplr(two_sigma2')], 'c');
@@ -36,11 +35,7 @@ hold on;
 plot(xtrain, ytrain, 'bx', MarkerSize=20);
 hold on;
 plot(xx, mu, 'b-', LineWidth=2);
-title("Simple Gaussian Process Regression");
-% xlabel("");
-% ylabel("");
-save_name = "simple_gpr.png";
-saveas(gcf, save_name);
+title("Simple Gaussian Process Regression")
 
 
 
