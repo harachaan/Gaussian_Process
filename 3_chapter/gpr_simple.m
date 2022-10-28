@@ -20,7 +20,7 @@ for i = 1:1:length(data)
 end
 
 % 無名関数
-kgauss = @(x,y) theta_1 * exp(-(x - y)^2 / (2 * theta_2 * theta_2));
+kgauss = @(x,y) theta_1 * exp(-(x - y)^2 / (2 * theta_2));
 
 % ここでとりあえず回帰はできた？
 xx = (-1:0.01:4)';
