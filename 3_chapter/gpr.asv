@@ -10,13 +10,11 @@ eta = log(1);
 params = [tau sigma eta];
 
 
-
-
 % 無名関数
 kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / exp(sigma))...
     + exp(eta) * delta(x, y);
 
-% x = 1; y = 2;
+x = 1; y = 2;
 gaussian_kernel(kgauss, x, y, params)
 % kgauss(x, y);
 function delta = delta(x, y)
