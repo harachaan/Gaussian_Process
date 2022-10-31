@@ -51,7 +51,9 @@ function kgrad = kgauss_grad(xi, xj, d, kernel, params)
 end
 
 % 一つのxtrainに対する行ベクトル．すなわち行が入力xx (１次元の入力ならx軸(横軸))，列がxtrainの学習カーネル行列？？
-function
+function kv = kv(x, xtrain, kernel)
+    for i = 1:1:N
+end
 
 
 
