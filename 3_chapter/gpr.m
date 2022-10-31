@@ -37,8 +37,10 @@ end
 
 % ハイパーパラメータに対する，式(3.92)の勾配？
 function kgrad = kgauss_grad(xi, xj, d, kernel, params)
-    if d == 0;
-        kernel(xi, xj, params)
+    if d == 0
+        kgrad = exp(params(1,1)) * kernel(xi, xj, params);
+    elseif d == 1
+        kgrad = kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params());
     end
 end
 
