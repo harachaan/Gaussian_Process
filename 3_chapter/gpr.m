@@ -35,15 +35,23 @@ function gaussian_kernel = gaussian_kernel(x, y, params)
     gaussian_kernel = kgauss(x, y);
 end
 
-% ハイパーパラメータに対する，式(3.92)の勾配？
+% ハイパーパラメータに対する，式(3.92)の勾配？dって何？
 function kgrad = kgauss_grad(xi, xj, d, kernel, params)
-    if d == 0
-        kgrad = exp(params(1,1)) * kernel(xi, xj, params);
-    elseif d == 1
-        kgrad = kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params());
+    if d == 1
+        kgrad = exp(params(1,d)) * kernel(xi, xj, params);
+    elseif d == 2
+        kgrad = kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params(1, d));
+    elseif d == 3
+        if xi == xj
+            kgrad = exp(1, d);
+        else
+            kgrad = 0;
+        end
     end
 end
 
+% 一つのxtrainに対する行ベクトル．すなわち行が入力xx (１次元の入力ならx軸(横軸))，列がxtrainの学習カーネル行列？？
+function
 
 
 
