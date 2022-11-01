@@ -23,9 +23,10 @@ end
 kgauss = @(x,y) theta_1 * exp(-(x - y)^2 / (2 * theta_2));
 
 % ここでとりあえず回帰はできた？
-xx = (-1:0.01:4)';
+xx = (-1:0.1:4)';
 regression = gpr(xx, xtrain, ytrain, kgauss, eta); % 1列目が期待値，２列目が分散
-mu = regression(:,1); var = regression(:,2);
+mu = regression(:,1);
+var = regression(:,2);
 two_sigma1 = mu - 2 * sqrt(var); two_sigma2 = mu + 2 * sqrt(var); 
 
 % プロット
