@@ -22,7 +22,7 @@ blue = '#ccccff'
 
 def kgauss (params):
     [tau,sigma,eta] = params
-    return lambda x,y,train=True: \
+    return lambda x,y,train=True: \ # この無名関数めっちゃ賢い
         exp(tau) * exp (-(x - y)**2 / exp(sigma)) + \
         (exp(eta) if (train and x == y) else 0)
 
@@ -77,7 +77,7 @@ def gradient (params,xtrain,ytrain,kernel,kgrad):
     D = len(params)
     N = len(xtrain)
     grad = np.zeros(D)
-    for d in xrange(D):
+    for d in xrange(D): # xrangeのよかったところをrangeの中に組み込んだからpython3では使えなくなった？
         G = np.array (
                 [kgrad (xi, xj, d, kernel, params)
                 for xi in xtrain for xj in xtrain]
