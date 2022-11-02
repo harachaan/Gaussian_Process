@@ -169,10 +169,20 @@ function ngrad = numgrad(params, xtrain, ytrain, eps)
     end
 end
 
-% ここから勾配法の最適化？
-function res = optimize(xtrain, ytrain, init) % initは初期値？
 
-end
+% ここから勾配法の最適化？
+
+% % 最小化 (using scipy.minimize in python)
+% function res = optimize(xtrain, ytrain, init) % initは初期値？
+% 
+% end
+% % SCG法
+% function
+% end
+% % L-BFGS法
+% function
+% end
+
 
 
 
