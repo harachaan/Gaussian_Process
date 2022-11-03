@@ -20,10 +20,14 @@ for i = 1:1:length(data)
 end
 
 
-
-% 確め計算ゾーン
+% 確め計算ゾーン -----------------------------------------------------------
+% kernel = gaussian_kernel;
 gaussian_kernel(xtrain(3,1), ytrain(3,1), params);
 kv(xtrain(i,1), xtrain, params);
+loglik(params, xtrain, ytrain);
+L_grad(params, xtrain, ytrain)
+% -------------------------------------------------------------------------
+
 
 % 回帰の計算
 xx = (-1:0.1:4)';
@@ -63,14 +67,14 @@ function gaussian_kernel = gaussian_kernel(x, y, params)
 end
 
 % ハイパーパラメータに対する，式(3.92)の勾配？dって何？
-function kgrad = kgauss_grad(xi, xj, d, kernel, params)
+function kgrad = kgauss_grad(xi, xj, d, params)
     if d == 1
-        kgrad = exp(params(1,d)) * kernel(xi, xj, params);
+        kgrad = exp(params(1,d)) * gaussian_kernel(xi, xj, params);
     elseif d == 2
-        kgrad = kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params(1, d));
+        kgrad = gaussian_kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params(1, d));
     elseif d == 3
         if xi == xj
-            kgrad = exp(1, d);
+            kgrad = exp(params(1, d));
         else
             kgrad = 0;
         end
@@ -113,10 +117,72 @@ function y = gpr(xx, xtrain, ytrain, params)
     y = [mu var]; % 回帰した平均と分散？
 end
 
-% trace (対角和)
-function trace = tr(A, B)
-    trace = 
+% trace (対角和) ではないかもしれない．なんだこれ → いや対角和っぽい
+function trace = tr(A, B) % AとBは行列
+    trace = sum(A * B', "all");
 end
+
+% hiper parameters を未知のthetaと置いたときの学習データの確率pのlogをとったやつ
+function L = loglik(params, xtrain, ytrain)
+    K = kernel_matrix(xtrain, params);
+    Kinv = inv(K);
+    L = log(det(K)) + ytrain' * Kinv * ytrain; % 教科書はマイナスだけどなんかプラスにしてる
+end
+
+% Lのハイパーパラメータthetaに対する勾配
+% function grad = gradient(params, xtrain, ytrain)　gradient関数がmatlabの中に既にあったからエラー？
+function grad = L_grad(params, xtrain, ytrain) % kernel=gaussian_kernel(), kgrad = kgauss_grad()
+    K = kernel_matrix(xtrain, params);
+    Kinv = inv(K);
+    Kinvy = Kinv * ytrain;
+    D = length(params);
+    N = length(xtrain);
+    grad = zeros(D, 1);
+    G = zeros(N, N);
+    for d = 1:1:D
+        for i = 1:1:N
+            for j = 1:1:N
+                % Gはカーネル行列の各要素をθベクトルの各要素で微分した行列 (p91)
+                G(i,j) = kgauss_grad(xtrain(i,1), xtrain(j,1), d, params);
+            end
+        end
+        size(tr(Kinv, G));
+        grad(d,1) = tr(Kinv, G) - Kinvy' * G * Kinvy;
+    end
+end
+
+% numgradが何をしているのかわかってない... → 使ってなさそう？？
+function ngrad = numgrad(params, xtrain, ytrain, eps)
+    arguments
+        % 引数のデフォルト値設定
+        params; xtrain; ytrain; eps = 1e-6;
+    end
+
+    D = length(params);
+    ngrad = zeros(D, 1);
+    for d = 1:1:D
+        lik = loglik(prams, xtrain, ytrain);
+        params(1,d) = params(1,d) + eps;
+        newlik = loglik(params, xtrain, ytrain);
+        params(1,d) = params(1,d) - eps; % なんだこれまじで
+        ngrad(d, 1) = (newlik - lik) / eps;
+    end
+end
+
+
+% ここから勾配法の最適化？
+
+% % 最小化 (using scipy.minimize in python)
+% function res = optimize(xtrain, ytrain, init) % initは初期値？
+% 
+% end
+% % SCG法
+% function
+% end
+% % L-BFGS法
+% function
+% end
+
 
 
 
