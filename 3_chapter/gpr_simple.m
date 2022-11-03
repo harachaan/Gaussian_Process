@@ -52,7 +52,7 @@ saveas(gcf, save_name);
 function kv = kv(x, xtrain, kernel)
 kv = zeros(length(xtrain), 1);
 for i = 1:1:length(xtrain) % x(ある一つの数字)行，xtrain(入力複数個)列にkernel関数から出るスカラーを要素とする１行ベクトルを出力→やっぱ縦ベクトル？verticalのv説
-    kv(i,1) = kernel(x, xtrain(i));
+    kv(i,1) = kernel(x, xtrain(i))
 end
 end
 

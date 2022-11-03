@@ -25,9 +25,12 @@ end
 gaussian_kernel(xtrain(3,1), ytrain(3,1), params);
 kv(xtrain(i,1), xtrain, params);
 loglik(params, xtrain, ytrain);
-L_grad(params, xtrain, ytrain)
+L_grad(params, xtrain, ytrain);
 % -------------------------------------------------------------------------
 
+% カーネル行列のハイパーパラメータ推定
+% params = optimize1(params, xtrain, ytrain)
+params
 
 % 回帰の計算
 xx = (-1:0.1:4)';
@@ -43,7 +46,7 @@ hold on;
 plot(xtrain, ytrain, 'bx', MarkerSize=20);
 hold on;
 plot(xx, mu, 'b-', LineWidth=2);
-title("Gaussian Process Regression with parameters estimation");
+title("GPR with parameters estimation");
 save_name = "gpr_with_params_estimation.png";
 saveas(gcf, save_name);
 
@@ -58,12 +61,18 @@ function delta = delta(x, y)
 end
 
 % デルタ関数考慮のガウスカーネル生成
-function gaussian_kernel = gaussian_kernel(x, y, params)
+function gaussian_kernel = gaussian_kernel(x, y, params, train)
+    arguments
+        x; y; params; train = true;
+    end
     tau = params(1,1); sigma = params(1,2); eta = params(1,3);
     % 無名関数
-    kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / exp(sigma))...
-        + exp(eta) * delta(x, y);
-    gaussian_kernel = kgauss(x, y);
+    kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / exp(sigma));
+    if train == true && x == y
+        gaussian_kernel = kgauss(x, y) + exp(eta);
+    else
+        gaussian_kernel = kgauss(x, y);
+    end
 end
 
 % ハイパーパラメータに対する，式(3.92)の勾配？dって何？
@@ -86,8 +95,7 @@ end
 function kv = kv(x, xtrain, params) % kernelを無名関数で作ってないから，kernelとして引数で与えられないことに注意．
     kv = zeros(length(xtrain), 1);
     for i = 1:1:length(xtrain)
-        kv(i,1) = gaussian_kernel(x, xtrain(i,1), params) ...
-            - exp(params(1,3)) * delta(x, xtrain(i,1)); % kvを作るときになんかしてる．．．
+        kv(i,1) = gaussian_kernel(x, xtrain(i,1), params, false) % kvを作るときになんかしてる．．．
     end    
 end
 
@@ -172,10 +180,28 @@ end
 
 % ここから勾配法の最適化？
 
-% % 最小化 (using scipy.minimize in python)
-% function res = optimize(xtrain, ytrain, init) % initは初期値？
-% 
-% end
+% 最小化 (using scipy.minimize in python) → とりあえず最急勾配法を手打ちで組んでみる
+function res = optimize1(params, xtrain, ytrain, eps, alpha, k_max) % initは初期値？
+    arguments
+        % eps: 収束判定条件，alpha: 学習率，k_max: 繰り返しの最大回数
+        params; xtrain; ytrain; eps = 1e-4; alpha = 1e-2; k_max = 100000;
+    end
+    repeat = 0;
+    for k = 1:1:k_max
+        grad = L_grad(params, xtrain, ytrain); % 3行1列
+        grad_norm = norm(grad);
+        repeat = repeat + 1; repeat
+        for i = 1:1:length(grad)
+            params(1,i) = params(1,i) - alpha * grad(i,1);
+        end
+        % 勾配の大きさがepsより小さくなったらループ終了
+        if grad_norm < eps
+            break
+        end
+    end
+    % 最小値をとるときのハイパーパラメータ
+    res = params;
+end
 % % SCG法
 % function
 % end
