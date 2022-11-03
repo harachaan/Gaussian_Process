@@ -6,8 +6,8 @@ close all
 % kernel parameters
 tau = log(1);
 sigma = log(1);
-% eta = log(1);
-eta = log(0.1);
+eta = log(1);
+% eta = log(0.1);
 
 params = [tau sigma eta];
 
@@ -29,8 +29,8 @@ L_grad(params, xtrain, ytrain);
 % -------------------------------------------------------------------------
 
 % カーネル行列のハイパーパラメータ推定
-% params = optimize1(params, xtrain, ytrain)
-params
+params = optimize1(params, xtrain, ytrain)
+% params
 
 % 回帰の計算
 xx = (-1:0.1:4)';
@@ -67,7 +67,7 @@ function gaussian_kernel = gaussian_kernel(x, y, params, train)
     end
     tau = params(1,1); sigma = params(1,2); eta = params(1,3);
     % 無名関数
-    kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / exp(sigma));
+    kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / (exp(sigma)));
     if train == true && x == y
         gaussian_kernel = kgauss(x, y) + exp(eta);
     else
@@ -95,7 +95,7 @@ end
 function kv = kv(x, xtrain, params) % kernelを無名関数で作ってないから，kernelとして引数で与えられないことに注意．
     kv = zeros(length(xtrain), 1);
     for i = 1:1:length(xtrain)
-        kv(i,1) = gaussian_kernel(x, xtrain(i,1), params, false) % kvを作るときになんかしてる．．．
+        kv(i,1) = gaussian_kernel(x, xtrain(i,1), params, false); % kvを作るときになんかしてる．．．
     end    
 end
 
@@ -184,7 +184,7 @@ end
 function res = optimize1(params, xtrain, ytrain, eps, alpha, k_max) % initは初期値？
     arguments
         % eps: 収束判定条件，alpha: 学習率，k_max: 繰り返しの最大回数
-        params; xtrain; ytrain; eps = 1e-4; alpha = 1e-2; k_max = 100000;
+        params; xtrain; ytrain; eps = 1e-4; alpha = 1e-2; k_max = 10000;
     end
     repeat = 0;
     for k = 1:1:k_max
