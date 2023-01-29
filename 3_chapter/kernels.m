@@ -3,6 +3,7 @@ clc
 clear
 close all
 
+curdir = pwd;
 
 % 入力は１次元？
 x = (-5:0.1:5)';
@@ -13,7 +14,7 @@ x = (-5:0.1:5)';
 % -------------------------------------------------------------------------
 
 % 無名関数に使われるparameters??
-params = [log(5) log(3)];
+params = [log(2) log(2)];
 theta_1 = params(1,1); theta_2 = params(1,2);
 
 theta = rand * 10;
@@ -39,6 +40,7 @@ kperiodic = @(x, y) exp(theta_1 * cos((x - y) / theta));
 
 % kernel_matrix(x, klinear);
 
+savedir = strcat(curdir, '/../../temporary/');
 
 f1 = figure;
 figure(f1);
@@ -47,7 +49,9 @@ y = gaussian_process(x, klinear);
 plot(x, y, '-')
 hold on;
 end
-title('Gaussian Process by Linear Kernel');
+filename = "GP-LinearKernel"; savename = strcat(savedir, filename, ".png");
+title(filename);
+saveas(gcf, savename);
 
 f2 = figure;
 figure(f2);
@@ -56,7 +60,9 @@ y = gaussian_process(x, kgauss);
 plot(x, y, '-')
 hold on;
 end
-title('GP by Gaussian Kernel');
+filename = "GP-GaussianKernel"; savename = strcat(savedir, filename, ".png");
+title(filename);
+saveas(gcf, savename);
 
 f3 = figure;
 figure(f3);
@@ -65,7 +71,9 @@ y = gaussian_process(x, kexp);
 plot(x, y, '-')
 hold on;
 end
-title('GP by Exponential Kernel');
+filename = "GP-ExponentialKernel"; savename = strcat(savedir, filename, ".png");
+title(filename);
+saveas(gcf, savename);
 
 f4 = figure;
 figure(f4);
@@ -74,12 +82,14 @@ y = gaussian_process(x, kperiodic);
 plot(x, y, '-')
 hold on;
 end
-title('GP by Periodic Kernel');
+filename = "GP-PeriodicKernel"; savename = strcat(savedir, filename, ".png");
+title(filename);
+saveas(gcf, savename);
 
 % xx = gauss2_gen(eye(2));
 % plot(xx(1,:), xx(2,:), 'o')
 
-
+% -------------------------------------------------------------------------------
 % 2次元??標準正規分布からのサンプルの生成(共分散行列sigmaは2次元だけど，N行N列？)
 function mvnrnd = gauss2_gen(sigma)
 % x1 = randn(1000, 1);

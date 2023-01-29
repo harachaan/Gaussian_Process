@@ -19,7 +19,6 @@ for i = 1:1:length(data)
     ytrain(i,1) = data(i,2);
 end
 
-
 % 確め計算ゾーン -----------------------------------------------------------
 % kernel = gaussian_kernel;
 gaussian_kernel(xtrain(3,1), ytrain(3,1), params);
