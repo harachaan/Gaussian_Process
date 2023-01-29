@@ -6,8 +6,8 @@ close all
 % kernel parameters
 tau = log(1);
 sigma = log(1);
-eta = log(1);
-% eta = log(0.1);
+% eta = log(1);
+eta = log(0.1);
 
 params = [tau sigma eta];
 
@@ -32,7 +32,7 @@ params = optimize1(params, xtrain, ytrain)
 % params
 
 % 回帰の計算
-xx = (-1:0.1:4)';
+xx = (-1:0.01:4)';
 regression = gpr(xx, xtrain, ytrain, params);
 mu = regression(:,1); var = regression(:,2);
 two_sigma1 = mu - 2 * sqrt(var); two_sigma2 = mu + 2 * sqrt(var);
@@ -67,7 +67,7 @@ function gaussian_kernel = gaussian_kernel(x, y, params, train)
     tau = params(1,1); sigma = params(1,2); eta = params(1,3);
     % 無名関数
     kgauss = @(x, y) exp(tau) * exp(-(x - y)^2 / (exp(sigma)));
-    if train == true && x == y
+    if train == true && x == y % 学習データかつデルタ関数考慮？
         gaussian_kernel = kgauss(x, y) + exp(eta);
     else
         gaussian_kernel = kgauss(x, y);
@@ -77,9 +77,9 @@ end
 % ハイパーパラメータに対する，式(3.92)の勾配？dって何？
 function kgrad = kgauss_grad(xi, xj, d, params)
     if d == 1
-        kgrad = exp(params(1,d)) * gaussian_kernel(xi, xj, params);
+        kgrad = gaussian_kernel(xi, xj, params, false);
     elseif d == 2
-        kgrad = gaussian_kernel(xi, xj, params) * (xi - xj) * (xi - xj) / exp(params(1, d));
+        kgrad = gaussian_kernel(xi, xj, params, false) * (xi - xj) * (xi - xj) / exp(params(1, d));
     elseif d == 3
         if xi == xj
             kgrad = exp(params(1, d));
