@@ -8,7 +8,7 @@ close all
 % GP kernel parameters
 eta = 0.1; % 誤差考慮？
 theta_1 = 1;
-theta_2 = 1;
+theta_2 = 0.3;
 params = [theta_1 theta_2];
 
 % 学習データ読み込み
@@ -40,7 +40,8 @@ plot(xx, mu, 'b-', LineWidth=2);
 title("Simple Gaussian Process Regression");
 % xlabel("");
 % ylabel("");
-save_name = "simple_gpr.png";
+savedir = strcat(pwd, '/../../temporary/');
+save_name = strcat(savedir, "simple_gpr.png");
 saveas(gcf, save_name);
 
 
@@ -52,7 +53,7 @@ saveas(gcf, save_name);
 function kv = kv(x, xtrain, kernel)
 kv = zeros(length(xtrain), 1);
 for i = 1:1:length(xtrain) % x(ある一つの数字)行，xtrain(入力複数個)列にkernel関数から出るスカラーを要素とする１行ベクトルを出力→やっぱ縦ベクトル？verticalのv説
-    kv(i,1) = kernel(x, xtrain(i))
+    kv(i,1) = kernel(x, xtrain(i));
 end
 end
 
